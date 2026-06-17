@@ -20,11 +20,11 @@ builder.Services.AddResponseCaching();
 // Add in-memory cache for service-layer caching (IMemoryCache).
 builder.Services.AddMemoryCache();
 
-// Register EF Core with SQLite using a factory pattern.
+// Register EF Core with PostgreSQL using a connection string from configuration.
 // IDbContextFactory ensures short-lived DbContext instances,
 // avoiding concurrency issues with singleton-repositories.
 builder.Services.AddDbContextFactory<AppDbContext>(options =>
-    options.UseSqlite("Data Source=MyApi.db"));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Register repository and service as singletons.
 // They use IDbContextFactory internally to create scoped DbContext instances.
