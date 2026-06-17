@@ -33,8 +33,14 @@ public class ProductService : IProductService
         var result = await _repository.GetAllProductsAsync(page, pageSize, ct).ConfigureAwait(false);
 
         // Map domain models to DTOs (only expose necessary fields).
-        var dtoItems = result.Items.Select(p => new ProductDto(p.Id, p.Name, p.Price));
-        var paged = new PagedResult<ProductDto>(dtoItems, result.TotalCount, result.PageNumber, result.PageSize);
+        var dtoItems = result.Items.Select(p => new ProductDto { Id = p.Id, Name = p.Name, Price = p.Price });
+        var paged = new PagedResult<ProductDto>
+        {
+            Items = dtoItems,
+            TotalCount = result.TotalCount,
+            PageNumber = result.PageNumber,
+            PageSize = result.PageSize
+        };
 
         // Store in cache with expiration policy.
         _cache.Set(cacheKey, paged, new MemoryCacheEntryOptions
@@ -64,7 +70,7 @@ public class ProductService : IProductService
             return null;
 
         // Map to DTO and cache.
-        var dto = new ProductDto(product.Id, product.Name, product.Price);
+        var dto = new ProductDto { Id = product.Id, Name = product.Name, Price = product.Price };
 
         _cache.Set(cacheKey, dto, new MemoryCacheEntryOptions
         {

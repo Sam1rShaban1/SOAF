@@ -1,6 +1,14 @@
-// Data Transfer Object for product responses.
-// Used to decouple the internal data model from the API contract.
-// Only exposes fields safe for external consumption.
+using System.ComponentModel.DataAnnotations;
+
 namespace MyApi.DTOs;
 
-public record ProductDto(int Id, string Name, decimal Price);
+public class ProductDto
+{
+    public int Id { get; set; }
+
+    [Required]
+    public string Name { get; set; } = string.Empty;
+
+    [Required]
+    public decimal Price { get; set; }
+}

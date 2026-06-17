@@ -23,12 +23,13 @@ public class ProductsControllerTest
 
     // Helper to create a sample paginated result for use in tests.
     private static PagedResult<ProductDto> SamplePagedResult(int page = 1, int pageSize = 10) =>
-        new(
-            Enumerable.Range(1, 3).Select(i => new ProductDto(i, $"Product {i}", i * 10m)),
-            TotalCount: 20,
-            PageNumber: page,
-            PageSize: pageSize
-        );
+        new PagedResult<ProductDto>
+        {
+            Items = Enumerable.Range(1, 3).Select(i => new ProductDto { Id = i, Name = $"Product {i}", Price = i * 10m }),
+            TotalCount = 20,
+            PageNumber = page,
+            PageSize = pageSize
+        };
 
     // -----------------------------------------------------------------------
     // GET /api/products — Happy Path Tests
@@ -103,7 +104,7 @@ public class ProductsControllerTest
     [Fact]
     public async Task GetProduct_WithValidId_Returns200Ok()
     {
-        var dto = new ProductDto(5, "Product 5", 50m);
+        var dto = new ProductDto { Id = 5, Name = "Product 5", Price = 50m };
         _service.GetProductAsync(5, Arg.Any<CancellationToken>()).Returns(dto);
 
         var result = await _controller.GetProduct(5);

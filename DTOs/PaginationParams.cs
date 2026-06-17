@@ -1,5 +1,14 @@
-// Encapsulates pagination request parameters with sensible defaults.
-// PageNumber starts at 1, PageSize defaults to 10 items per page.
+using System.ComponentModel.DataAnnotations;
+
 namespace MyApi.DTOs;
 
-public record PaginationParams(int PageNumber = 1, int PageSize = 10);
+public class PaginationParams
+{
+    [Required]
+    [Range(1, int.MaxValue)]
+    public int PageNumber { get; set; } = 1;
+
+    [Required]
+    [Range(1, 100)]
+    public int PageSize { get; set; } = 10;
+}

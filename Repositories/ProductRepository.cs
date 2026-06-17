@@ -30,7 +30,7 @@ public class ProductRepository : IProductRepository
         // Guard clause: invalid pagination values return an empty result immediately.
         if (page <= 0 || pageSize <= 0)
         {
-            return new PagedResult<Product>(Enumerable.Empty<Product>(), 0, page, pageSize);
+            return new PagedResult<Product> { Items = [], TotalCount = 0, PageNumber = page, PageSize = pageSize };
         }
 
         // Build the query: read-only, active only, ordered by Id.
@@ -48,7 +48,7 @@ public class ProductRepository : IProductRepository
             .Take(pageSize)                      // Limit to page size.
             .ToListAsync(ct);                     // Materialize to List<Product>.
 
-        return new PagedResult<Product>(items, total, page, pageSize);
+        return new PagedResult<Product> { Items = items, TotalCount = total, PageNumber = page, PageSize = pageSize };
     }
 
     // Retrieves a single active product by Id, or null if not found or inactive.

@@ -43,7 +43,7 @@ public class ProductServiceTest
     {
         var products = SampleProducts();
         _repo.GetAllProductsAsync(2, 5, Arg.Any<CancellationToken>())
-            .Returns(new PagedResult<Product>(products, 20, 2, 5));
+            .Returns(new PagedResult<Product> { Items = products, TotalCount = 20, PageNumber = 2, PageSize = 5 });
 
         await _service.GetProductsAsync(2, 5);
 
@@ -56,7 +56,7 @@ public class ProductServiceTest
     {
         var products = SampleProducts();
         _repo.GetAllProductsAsync(1, 10, Arg.Any<CancellationToken>())
-            .Returns(new PagedResult<Product>(products, 5, 1, 10));
+            .Returns(new PagedResult<Product> { Items = products, TotalCount = 5, PageNumber = 1, PageSize = 10 });
 
         var result = await _service.GetProductsAsync(1, 10);
 
@@ -74,7 +74,7 @@ public class ProductServiceTest
     public async Task GetProductsAsync_WithEmptyRepository_ReturnsEmpty()
     {
         _repo.GetAllProductsAsync(1, 10, Arg.Any<CancellationToken>())
-            .Returns(new PagedResult<Product>(new List<Product>(), 0, 1, 10));
+            .Returns(new PagedResult<Product> { Items = [], TotalCount = 0, PageNumber = 1, PageSize = 10 });
 
         var result = await _service.GetProductsAsync(1, 10);
 
@@ -91,7 +91,7 @@ public class ProductServiceTest
     {
         var products = SampleProducts();
         _repo.GetAllProductsAsync(1, 10, Arg.Any<CancellationToken>())
-            .Returns(new PagedResult<Product>(products, 5, 1, 10));
+            .Returns(new PagedResult<Product> { Items = products, TotalCount = 5, PageNumber = 1, PageSize = 10 });
 
         // First call: cache miss, should call repository.
         await _service.GetProductsAsync(1, 10);
